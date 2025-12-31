@@ -584,7 +584,7 @@ const App: React.FC = () => {
       <header className="bg-nasida-green-900 shadow-lg sticky top-0 z-40">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <img src="nasida_logo_new.png" alt="NASIDA" className="h-14 sm:h-20 w-auto object-contain" />
+            <img src="assets/nasida_logo_new.png" alt="NASIDA" className="h-14 sm:h-20 w-auto object-contain" />
             <div className="hidden md:flex items-center space-x-6">
                 <div className="h-10 w-px bg-green-700/50"></div>
                 <div className="flex flex-col justify-center text-white">
