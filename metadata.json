@@ -1,0 +1,6 @@
+{
+  "name": "NASIDA One-Stop Shop",
+  "description": "A web page dashboard to track investment projects, their stages, and focal persons. Data is managed locally within the browser session using LocalStorage.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

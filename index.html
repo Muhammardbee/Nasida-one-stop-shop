@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NASIDA One-Stop Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: 'rgb(var(--color-primary) / <alpha-value>)',
+              secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+              accent: 'rgb(var(--color-accent) / <alpha-value>)',
+              neutral: 'rgb(var(--color-neutral) / <alpha-value>)',
+              'base-100': 'rgb(var(--color-base-100) / <alpha-value>)',
+              info: 'rgb(var(--color-info) / <alpha-value>)',
+              success: 'rgb(var(--color-success) / <alpha-value>)',
+              warning: 'rgb(var(--color-warning) / <alpha-value>)',
+              error: 'rgb(var(--color-error) / <alpha-value>)',
+              'nasida-green': {
+                50: '#f0fdf4',
+                100: '#dcfce7',
+                500: '#22c55e',
+                700: '#15803d',
+                800: '#166534',
+                900: '#006A3E', // Deep NASIDA Green
+              }
+            },
+            backgroundImage: {
+              'hero-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23006a3e' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+            }
+          },
+        },
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer base {
+        :root {
+          /* Deep Green from NASIDA Logo */
+          --color-primary: 0 106 62; 
+          /* Brighter Green from One-Stop Shop Text */
+          --color-secondary: 34 197 94; 
+          --color-accent: 22 163 74; 
+          --color-neutral: 71 85 105;
+          --color-base-100: 240 253 244; /* Very light green tint */
+          --color-info: 56 189 248; 
+          --color-success: 34 197 94; 
+          --color-warning: 245 158 11; 
+          --color-error: 239 68 68; 
+        }
+        body {
+          @apply bg-base-100 text-neutral antialiased;
+        }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "jspdf": "https://esm.sh/jspdf@^2.5.1",
+    "jspdf-autotable": "https://esm.sh/jspdf-autotable@^3.8.2"
+  }
+}
+</script>
+</head>
+  <body>
+    <noscript>You need to enable JavaScript to view this page.</noscript>
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+  </body>
+</html>
