@@ -62,3 +62,10 @@ export const STAGE_BG_COLORS: Record<ProjectStage, string> = {
   [ProjectStage.MOVED_TO_SITE]: 'bg-purple-500',
   [ProjectStage.COMPLETED]: 'bg-green-500',
 };
+
+export const STAGE_PROGRESS: Record<ProjectStage, number> = {
+  [ProjectStage.INITIATION]: 25,
+  [ProjectStage.MOU_SIGNED]: 50,
+  [ProjectStage.MOVED_TO_SITE]: 75,
+  [ProjectStage.COMPLETED]: 100,
+};

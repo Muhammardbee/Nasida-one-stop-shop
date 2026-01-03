@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
 import { UserCircleIcon } from './icons';
-import { UserRole } from '../types';
+import { User, UserRole } from '../types';
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  users: User[];
   onLogin: (username: string, role: UserRole) => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, users, onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,23 +19,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Roles mapping: 
-    // admin -> ADMIN
-    // manager -> EDITOR
-    // viewer -> VIEWER
-    const normalizedUser = username.toLowerCase().trim();
+    const normalizedUser = username.trim().toLowerCase();
     
-    if (password === 'nasida') {
-      if (normalizedUser === 'admin') {
-        onLogin('admin', UserRole.ADMIN);
-      } else if (normalizedUser === 'manager') {
-        onLogin('manager', UserRole.EDITOR);
-      } else if (normalizedUser === 'viewer') {
-        onLogin('viewer', UserRole.VIEWER);
-      } else {
-        setError('Unauthorized username for these credentials.');
-        return;
-      }
+    const foundUser = users.find(u => u.username.toLowerCase() === normalizedUser && u.password === password);
+    
+    if (foundUser) {
+      onLogin(foundUser.username, foundUser.role);
       setError('');
       setUsername('');
       setPassword('');
@@ -56,7 +46,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => 
           </div>
           <div className="text-center mt-3 sm:mt-5">
             <h3 className="text-2xl font-black text-gray-900 tracking-tight" id="modal-title">System Access</h3>
-            <p className="mt-2 text-sm text-gray-500 font-medium">Please enter your specialized credentials.</p>
+            <p className="mt-2 text-sm text-gray-500 font-medium">Please enter your authorized credentials.</p>
           </div>
 
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -69,7 +59,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => 
                   className="block w-full rounded-xl border-gray-200 shadow-sm focus:border-primary focus:ring-primary text-sm p-3 border transition-all"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin, manager, or viewer"
+                  placeholder="Enter your username"
                   required
                 />
               </div>
@@ -94,15 +84,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLogin }) => 
                <button type="submit" className="flex justify-center rounded-xl border border-transparent shadow-lg px-4 py-3 bg-nasida-green-900 text-sm font-black text-white hover:bg-opacity-90 transition-all active:scale-95">Sign In</button>
             </div>
           </form>
-          
-          <div className="mt-6 text-center">
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Role Privileges</p>
-            <div className="mt-2 flex justify-center space-x-2 text-[8px] font-black uppercase tracking-tighter text-gray-500">
-               <span className="bg-gray-100 px-1.5 py-0.5 rounded border">Admin: Full Control</span>
-               <span className="bg-gray-100 px-1.5 py-0.5 rounded border">Editor: Add/Edit</span>
-               <span className="bg-gray-100 px-1.5 py-0.5 rounded border">Viewer: Read Only</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>

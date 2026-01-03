@@ -12,6 +12,14 @@ export enum UserRole {
   VIEWER = 'viewer',
 }
 
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  role: UserRole;
+  createdAt: string;
+}
+
 export enum ProjectLocation {
   KEFFI = 'Keffi',
   KARU = 'Karu',
