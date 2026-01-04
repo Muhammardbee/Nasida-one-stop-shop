@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, memo } from 'react';
 import { Project, ProjectFormData, ProjectStage, ProjectLocation, InvestmentType } from '../types';
 import { PROJECT_STAGE_OPTIONS, PROJECT_LOCATION_OPTIONS, INVESTMENT_TYPE_OPTIONS, PREDEFINED_SECTORS } from '../constants';
 import { PlusIcon, DocumentTextIcon, ArrowUpTrayIcon, XMarkIcon, FlagIcon, ExclamationTriangleIcon, CheckIcon } from './icons';
@@ -19,23 +19,87 @@ interface ImportSummary {
 
 const AUTOSAVE_KEY = 'nasida_project_form_draft_v1';
 
-const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjects, existingProjects, currentUser }) => {
-  const initialFormState: ProjectFormData = {
-    projectName: '',
-    projectDescription: '',
-    focalPersonName: '',
-    focalPersonPhone: '',
-    focalPersonEmail: '',
-    projectStage: ProjectStage.INITIATION,
-    projectLocation: ProjectLocation.KEFFI,
-    projectSubLocation: '',
-    projectSector: '',
-    jobsToBeCreated: 0,
-    investmentWorth: 0,
-    investmentType: InvestmentType.DDI,
-    requiresFollowUp: false,
-  };
+const initialFormState: ProjectFormData = {
+  projectName: '',
+  projectDescription: '',
+  focalPersonName: '',
+  focalPersonPhone: '',
+  focalPersonEmail: '',
+  projectStage: ProjectStage.INITIATION,
+  projectLocation: ProjectLocation.KEFFI,
+  projectSubLocation: '',
+  projectSector: '',
+  jobsToBeCreated: 0,
+  investmentWorth: 0,
+  investmentType: InvestmentType.DDI,
+  requiresFollowUp: false,
+};
 
+// Memoized InputField defined outside to prevent focus loss and unnecessary re-renders
+const InputField = memo(({
+  label, 
+  name, 
+  value, 
+  error, 
+  type = "text", 
+  isTextarea = false, 
+  placeholder, 
+  required = false, 
+  list, 
+  onChange
+}: {
+  label: string, 
+  name: keyof ProjectFormData, 
+  value: string | number, 
+  error?: string, 
+  type?: string, 
+  isTextarea?: boolean, 
+  placeholder?: string, 
+  required?: boolean, 
+  list?: string,
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
+}) => (
+  <div className="relative">
+    <label htmlFor={`add-form-${name}`} className="block text-sm font-medium text-gray-700 mb-1">
+      {label}{required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
+    </label>
+    {isTextarea ? (
+      <textarea
+        id={`add-form-${name}`}
+        name={name}
+        value={String(value)}
+        onChange={onChange}
+        rows={3}
+        placeholder={placeholder}
+        aria-required={required}
+        aria-invalid={!!error}
+        className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm transition-all border ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-primary focus:ring-primary'}`}
+      />
+    ) : (
+      <input
+        type={type}
+        id={`add-form-${name}`}
+        name={name}
+        list={list}
+        value={String(value)}
+        onChange={onChange}
+        placeholder={placeholder}
+        aria-required={required}
+        aria-invalid={!!error}
+        className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm transition-all border ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-primary focus:ring-primary'}`}
+      />
+    )}
+    {error && (
+      <p role="alert" className="mt-1 text-xs text-red-600 font-medium">
+        {error}
+      </p>
+    )}
+  </div>
+));
+
+InputField.displayName = 'InputField';
+
+const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjects, existingProjects, currentUser }) => {
   const [formData, setFormData] = useState<ProjectFormData>(initialFormState);
   const [errors, setErrors] = useState<Partial<Record<keyof ProjectFormData, string>>>({});
   const [isRestored, setIsRestored] = useState(false);
@@ -83,7 +147,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
       saveTimeoutRef.current = window.setTimeout(() => {
         localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(formData));
         setLastSaved(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-      }, 1000);
+      }, 1500);
     }
 
     return () => {
@@ -154,9 +218,16 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
     }
 
     setFormData(prev => ({ ...prev, [name]: processedValue }));
-    if (errors[name as keyof ProjectFormData]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
-    }
+    
+    // Clear error only if one exists to avoid unnecessary state updates
+    setErrors(prev => {
+      if (prev[name as keyof ProjectFormData]) {
+        const newErrors = { ...prev };
+        delete newErrors[name as keyof ProjectFormData];
+        return newErrors;
+      }
+      return prev;
+    });
   };
 
   const handleReset = () => {
@@ -281,47 +352,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
     reader.readAsText(file);
   };
 
-  const InputField: React.FC<{label: string, name: keyof ProjectFormData, value: string | number, error?: string, type?: string, isTextarea?: boolean, placeholder?: string, required?: boolean, list?: string}> = 
-    ({label, name, value, error, type="text", isTextarea=false, placeholder, required=false, list}) => (
-    <div className="relative">
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
-        {label}{required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
-      </label>
-      {isTextarea ? (
-        <textarea
-          id={name}
-          name={name}
-          value={String(value)}
-          onChange={handleChange}
-          rows={3}
-          placeholder={placeholder}
-          aria-required={required}
-          aria-invalid={!!error}
-          className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm transition-all border ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-primary focus:ring-primary'}`}
-        />
-      ) : (
-        <input
-          type={type}
-          id={name}
-          name={name}
-          list={list}
-          value={String(value)}
-          onChange={handleChange}
-          placeholder={placeholder}
-          aria-required={required}
-          aria-invalid={!!error}
-          className={`mt-1 block w-full rounded-md shadow-sm sm:text-sm transition-all border ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-primary focus:ring-primary'}`}
-        />
-      )}
-      {error && (
-        <p role="alert" className="mt-1 text-xs text-red-600 font-medium">
-          {error}
-        </p>
-      )}
-    </div>
-  );
-
-
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden" role="region" aria-labelledby="form-title">
       {isRestored && (
@@ -395,21 +425,21 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-        <InputField label="Project Name" name="projectName" value={formData.projectName} error={errors.projectName} required placeholder="e.g., Solar Farm Phase 1" />
-        <InputField label="Project Description" name="projectDescription" value={formData.projectDescription} error={errors.projectDescription} isTextarea placeholder="Enter a brief project overview..."/>
+        <InputField label="Project Name" name="projectName" value={formData.projectName} error={errors.projectName} required placeholder="e.g., Solar Farm Phase 1" onChange={handleChange} />
+        <InputField label="Project Description" name="projectDescription" value={formData.projectDescription} error={errors.projectDescription} isTextarea placeholder="Enter a brief project overview..." onChange={handleChange}/>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="projectStage" className="block text-sm font-medium text-gray-700 mb-1">Project Stage*</label>
-            <select id="projectStage" name="projectStage" value={formData.projectStage} onChange={handleChange} className="block w-full rounded-md shadow-sm sm:text-sm border border-gray-300 focus:border-primary focus:ring-primary">
+            <label htmlFor="add-form-projectStage" className="block text-sm font-medium text-gray-700 mb-1">Project Stage*</label>
+            <select id="add-form-projectStage" name="projectStage" value={formData.projectStage} onChange={handleChange} className="block w-full rounded-md shadow-sm sm:text-sm border border-gray-300 focus:border-primary focus:ring-primary">
               {PROJECT_STAGE_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
           </div>
           <div>
-            <label htmlFor="projectLocation" className="block text-sm font-medium text-gray-700 mb-1">Project Location*</label>
-            <select id="projectLocation" name="projectLocation" value={formData.projectLocation} onChange={handleChange} className="block w-full rounded-md shadow-sm sm:text-sm border border-gray-300 focus:border-primary focus:ring-primary">
+            <label htmlFor="add-form-projectLocation" className="block text-sm font-medium text-gray-700 mb-1">Project Location*</label>
+            <select id="add-form-projectLocation" name="projectLocation" value={formData.projectLocation} onChange={handleChange} className="block w-full rounded-md shadow-sm sm:text-sm border border-gray-300 focus:border-primary focus:ring-primary">
               {PROJECT_LOCATION_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
@@ -418,23 +448,23 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <InputField label="Project Sector" name="projectSector" value={formData.projectSector} error={errors.projectSector} required list="sector-suggestions" placeholder="e.g., Agriculture, Energy" />
+          <InputField label="Project Sector" name="projectSector" value={formData.projectSector} error={errors.projectSector} required list="sector-suggestions" placeholder="e.g., Agriculture, Energy" onChange={handleChange} />
           <datalist id="sector-suggestions">{sectorSuggestions.map(sector => (<option key={sector} value={sector} />))}</datalist>
-          <InputField label="Project Sub-Location" name="projectSubLocation" value={formData.projectSubLocation} error={errors.projectSubLocation} placeholder="e.g., Angwan Maina"/>
+          <InputField label="Project Sub-Location" name="projectSubLocation" value={formData.projectSubLocation} error={errors.projectSubLocation} placeholder="e.g., Angwan Maina" onChange={handleChange}/>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <InputField label="Jobs to be Created" name="jobsToBeCreated" value={formData.jobsToBeCreated} error={errors.jobsToBeCreated} type="number" />
-          <InputField label="Investment Worth ($)" name="investmentWorth" value={formData.investmentWorth} error={errors.investmentWorth} type="number" />
+          <InputField label="Jobs to be Created" name="jobsToBeCreated" value={formData.jobsToBeCreated} error={errors.jobsToBeCreated} type="number" onChange={handleChange} />
+          <InputField label="Investment Worth ($)" name="investmentWorth" value={formData.investmentWorth} error={errors.investmentWorth} type="number" onChange={handleChange} />
         </div>
 
         <div className="flex items-center space-x-3 bg-amber-50/50 p-4 rounded-xl border border-amber-100/50">
             <div className="relative flex items-center h-5">
-              <input id="requiresFollowUp" name="requiresFollowUp" type="checkbox" checked={formData.requiresFollowUp} onChange={handleChange} className="focus:ring-amber-500 h-5 w-5 text-amber-600 border-gray-300 rounded cursor-pointer" />
+              <input id="add-form-requiresFollowUp" name="requiresFollowUp" type="checkbox" checked={formData.requiresFollowUp} onChange={handleChange} className="focus:ring-amber-500 h-5 w-5 text-amber-600 border-gray-300 rounded cursor-pointer" />
             </div>
             <div className="ml-3 text-sm flex items-center">
               <FlagIcon className={`w-4 h-4 mr-2 ${formData.requiresFollowUp ? 'text-amber-600 fill-amber-600' : 'text-gray-300'}`} />
-              <label htmlFor="requiresFollowUp" className="font-bold text-gray-700 cursor-pointer flex items-center">
+              <label htmlFor="add-form-requiresFollowUp" className="font-bold text-gray-700 cursor-pointer flex items-center">
                 Requires Follow-Up Oversight
                 <span className="ml-2 text-[10px] text-amber-600 font-black uppercase tracking-widest">(Flag for Review)</span>
               </label>
@@ -443,10 +473,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onAddProject, onBulkAddProjec
 
         <div className="border-t border-gray-100 pt-5 space-y-4">
           <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Focal Person Details</h3>
-          <InputField label="Name" name="focalPersonName" value={formData.focalPersonName} error={errors.focalPersonName} required placeholder="Full Name" />
+          <InputField label="Name" name="focalPersonName" value={formData.focalPersonName} error={errors.focalPersonName} required placeholder="Full Name" onChange={handleChange} />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <InputField label="Phone" name="focalPersonPhone" value={formData.focalPersonPhone} error={errors.focalPersonPhone} type="tel" />
-            <InputField label="Email" name="focalPersonEmail" value={formData.focalPersonEmail} error={errors.focalPersonEmail} type="email" />
+            <InputField label="Phone" name="focalPersonPhone" value={formData.focalPersonPhone} error={errors.focalPersonPhone} type="tel" onChange={handleChange} />
+            <InputField label="Email" name="focalPersonEmail" value={formData.focalPersonEmail} error={errors.focalPersonEmail} type="email" onChange={handleChange} />
           </div>
         </div>
         
