@@ -274,12 +274,13 @@ const DisplayDashboard: React.FC<DisplayDashboardProps> = ({ projects, onClose }
       {/* HEADER: MATCHES APP HEADER COLOR */}
       <header className="px-6 sm:px-12 h-20 sm:h-24 flex justify-between items-center relative z-20 bg-[#006A3E] shadow-xl">
          <div className="flex items-center space-x-6">
-            <img 
-              src="https://nasida.na.gov.ng/img/nasida-logo.0ba663ba.svg" 
-              alt="NASIDA" 
-              className="h-10 sm:h-16 invert brightness-0 object-contain cursor-pointer" 
-              onClick={onClose}
-            />
+            <a href="https://nasida.na.gov.ng/" target="_blank" rel="noopener noreferrer">
+              <img 
+                src="https://nasida.na.gov.ng/img/nasida-logo.0ba663ba.svg" 
+                alt="NASIDA" 
+                className="h-10 sm:h-16 invert brightness-0 object-contain cursor-pointer hover:opacity-80 transition-opacity" 
+              />
+            </a>
             <div className="h-10 w-px bg-white/10 hidden sm:block"></div>
             <div className="hidden sm:block">
                 <div className="flex items-center space-x-3">
