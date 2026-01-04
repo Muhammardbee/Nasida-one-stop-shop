@@ -152,6 +152,8 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
         p.projectDescription.toLowerCase().includes(lowerSearch) ||
         p.projectSector.toLowerCase().includes(lowerSearch) ||
         p.projectLocation.toLowerCase().includes(lowerSearch) ||
+        p.focalPersonName.toLowerCase().includes(lowerSearch) ||
+        p.focalPersonEmail.toLowerCase().includes(lowerSearch) ||
         p.id.toLowerCase().includes(lowerSearch)
       );
     }
@@ -267,7 +269,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                 <input
                   type="text"
                   className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-all shadow-sm"
-                  placeholder="Search projects by name, sector, LGA..."
+                  placeholder="Search by name, sector, LGA, or focal person..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -345,7 +347,7 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                </div>
              </div>
            ) : (
-             <div className="p-4 flex items-center justify-between border-b border-gray-100">
+             <div className="p-3 sm:p-4 flex items-center justify-between border-b border-gray-100">
                 <div className="flex items-center space-x-3">
                   {selectedIds.length > 0 ? (
                     <div className="flex items-center space-x-2">
@@ -353,22 +355,22 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                       <button onClick={() => onSelectAll([])} className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Clear</button>
                     </div>
                   ) : (
-                    <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight">Active Portfolio</h3>
+                    <h3 className="text-xs sm:text-sm font-black text-gray-900 uppercase tracking-tight">Portfolio</h3>
                   )}
                 </div>
                 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
                    <button 
                     onClick={() => setIsMobileSearchActive(true)}
-                    className={`p-2.5 rounded-xl transition-all ${searchTerm ? 'bg-primary text-white shadow-md' : 'bg-gray-100 text-gray-500'}`}
+                    className={`p-2 sm:p-2.5 rounded-xl transition-all ${searchTerm ? 'bg-primary text-white shadow-md' : 'bg-gray-100 text-gray-500'}`}
                    >
-                     <MagnifyingGlassIcon className="w-6 h-6" />
+                     <MagnifyingGlassIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                    </button>
 
                    {isEditor && selectedIds.length > 0 && (
                      <button 
                       onClick={() => onBulkEdit?.('projectStage')}
-                      className="bg-nasida-green-900 text-white px-4 py-2.5 rounded-xl font-black text-xs shadow-lg"
+                      className="bg-nasida-green-900 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl font-black text-[10px] sm:text-xs shadow-lg"
                      >
                        Edit {selectedIds.length}
                      </button>
@@ -377,9 +379,9 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                    {!isViewer && selectedIds.length === 0 && (
                      <button
                        onClick={() => onQuickExport?.(filteredAndSortedProjects)}
-                       className="p-2.5 rounded-xl bg-gray-100 text-gray-500"
+                       className="p-2 sm:p-2.5 rounded-xl bg-gray-100 text-gray-500"
                      >
-                       <ArrowDownTrayIcon className="w-6 h-6" />
+                       <ArrowDownTrayIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                      </button>
                    )}
                 </div>
@@ -405,14 +407,6 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
             </div>
             <p className="text-gray-500 text-lg font-bold">No matches found</p>
             <p className="text-gray-400 text-sm mt-1">Try adjusting your search terms or filters.</p>
-            {searchTerm && (
-               <button 
-                onClick={() => setSearchTerm('')} 
-                className="mt-4 text-primary font-black uppercase text-xs tracking-widest hover:underline"
-               >
-                 Clear Search
-               </button>
-            )}
           </div>
         ) : (
           <>
@@ -471,27 +465,10 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                           <div className="flex items-center space-x-2">
                             <div className={`w-2.5 h-2.5 rounded-full ${STAGE_BG_COLORS[project.projectStage]}`} />
                             {project.requiresFollowUp && <FlagIcon className="w-4 h-4 text-amber-500 fill-amber-500 animate-pulse" />}
-                            <span 
-                                className="font-semibold text-sm text-gray-900 hover:text-primary hover:underline transition-all cursor-pointer"
-                                onClick={(e) => { e.stopPropagation(); onProjectClick?.(project); }}
-                            >
-                                {project.projectName}
-                            </span>
+                            <span className="font-semibold text-sm text-gray-900 hover:text-primary transition-all">{project.projectName}</span>
                             <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button 
-                                onClick={(e) => { e.stopPropagation(); onProjectClick?.(project); }} 
-                                className="p-1 rounded-md text-gray-300 hover:text-primary transition-all"
-                                title="View Full Report"
-                              >
-                                <EyeIcon className="w-3.5 h-3.5" />
-                              </button>
-                              <button 
-                                onClick={(e) => handleCopy(project.id, project.projectName, e)} 
-                                className={`p-1 rounded-md ${isCopied ? 'text-green-600' : 'text-gray-300 hover:text-primary'}`}
-                                title="Copy Name"
-                              >
-                                {isCopied ? <CheckIcon className="w-3.5 h-3.5" /> : <ClipboardIcon className="w-3.5 h-3.5" />}
-                              </button>
+                              <button onClick={(e) => { e.stopPropagation(); onProjectClick?.(project); }} className="p-1 rounded-md text-gray-300 hover:text-primary"><EyeIcon className="w-3.5 h-3.5" /></button>
+                              <button onClick={(e) => (handleCopy(project.id, project.projectName, e))} className={`p-1 rounded-md ${isCopied ? 'text-green-600' : 'text-gray-300 hover:text-primary'}`}>{isCopied ? <CheckIcon className="w-3.5 h-3.5" /> : <ClipboardIcon className="w-3.5 h-3.5" />}</button>
                             </div>
                           </div>
                         </td>
@@ -526,43 +503,37 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
               </table>
             </div>
 
-            {/* Mobile Cards - Refined for priority and full content visibility */}
-            <div className="lg:hidden p-4 bg-gray-100/40 space-y-5">
+            {/* Mobile Cards */}
+            <div className="lg:hidden p-3 sm:p-4 bg-gray-100/40 space-y-4 sm:space-y-5">
               {filteredAndSortedProjects.map(project => {
                 const isSelected = selectedIds.includes(project.id);
                 const isCopied = copiedId === project.id;
                 const progress = STAGE_PROGRESS[project.projectStage] || 0;
 
                 return (
-                  <div key={project.id} className={`relative rounded-[2rem] shadow-lg border transition-all duration-300 overflow-hidden ${isSelected ? 'bg-white border-primary ring-4 ring-primary ring-opacity-20 scale-[1.02]' : project.requiresFollowUp ? 'bg-amber-50 border-amber-300' : 'bg-white border-gray-100'}`} onClick={() => onProjectClick && onProjectClick(project)}>
-                    <div className={`absolute top-0 left-0 bottom-0 w-2 ${isSelected ? 'bg-primary' : project.requiresFollowUp ? 'bg-amber-400' : 'bg-nasida-green-900/10'}`}></div>
+                  <div key={project.id} className={`relative rounded-2xl sm:rounded-[2rem] shadow-lg border transition-all duration-300 overflow-hidden ${isSelected ? 'bg-white border-primary ring-2 sm:ring-4 ring-primary ring-opacity-20' : project.requiresFollowUp ? 'bg-amber-50 border-amber-300' : 'bg-white border-gray-100'}`} onClick={() => onProjectClick && onProjectClick(project)}>
+                    <div className={`absolute top-0 left-0 bottom-0 w-1.5 sm:w-2 ${isSelected ? 'bg-primary' : project.requiresFollowUp ? 'bg-amber-400' : 'bg-nasida-green-900/10'}`}></div>
                     
-                    <div className="p-6">
-                      {/* Header Segment */}
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-start space-x-3 overflow-hidden flex-grow">
-                          {isEditor && <div onClick={(e) => e.stopPropagation()} className="mt-1.5"><input type="checkbox" className="h-6 w-6 text-primary border-gray-300 rounded-lg shadow-sm" checked={isSelected} onChange={() => onSelectionChange(project.id)} /></div>}
+                    <div className="p-4 sm:p-6">
+                      <div className="flex justify-between items-start mb-3 sm:mb-4">
+                        <div className="flex items-start space-x-2 sm:space-x-3 overflow-hidden flex-grow">
+                          {isEditor && <div onClick={(e) => e.stopPropagation()} className="mt-1"><input type="checkbox" className="h-5 w-5 sm:h-6 sm:w-6 text-primary border-gray-300 rounded-lg shadow-sm" checked={isSelected} onChange={() => onSelectionChange(project.id)} /></div>}
                           <div className="overflow-hidden w-full">
-                            <div className="flex items-center space-x-2 mb-2">
-                              {project.requiresFollowUp && <FlagIcon className="w-5 h-5 text-amber-500 fill-amber-500 animate-pulse" />}
-                              <h3 
-                                className="text-2xl font-black text-gray-900 tracking-tight leading-tight truncate hover:text-primary transition-colors cursor-pointer"
-                                onClick={(e) => { e.stopPropagation(); onProjectClick?.(project); }}
-                              >
-                                {project.projectName}
-                              </h3>
-                              <button onClick={(e) => handleCopy(project.id, project.projectName, e)} className={`p-2 rounded-full transition-colors ${isCopied ? 'text-green-600 bg-green-50' : 'text-gray-400 hover:bg-gray-100'}`}>{isCopied ? <CheckIcon className="w-4 h-4" /> : <ClipboardIcon className="w-4 h-4" />}</button>
+                            <div className="flex items-center space-x-2 mb-1.5 sm:mb-2 overflow-hidden">
+                              {project.requiresFollowUp && <FlagIcon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500 fill-amber-500 flex-shrink-0" />}
+                              <h3 className="text-lg sm:text-2xl font-black text-gray-900 tracking-tight leading-tight truncate">{project.projectName}</h3>
+                              <button onClick={(e) => (handleCopy(project.id, project.projectName, e))} className={`p-1.5 rounded-full flex-shrink-0 transition-colors ${isCopied ? 'text-green-600' : 'text-gray-400'}`}>{isCopied ? <CheckIcon className="w-4 h-4" /> : <ClipboardIcon className="w-4 h-4" />}</button>
                             </div>
-                            <div className="flex flex-col space-y-3">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.05em] border border-transparent shadow-sm ${STAGE_COLORS[project.projectStage]}`}>{project.projectStage}</span>
-                                <span className="px-3 py-1 rounded-full bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-[0.05em] border border-gray-200">{project.projectSector || 'General Portfolio'}</span>
+                            <div className="flex flex-col space-y-2 sm:space-y-3">
+                              <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                <span className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-wider ${STAGE_COLORS[project.projectStage]}`}>{project.projectStage}</span>
+                                <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-gray-50 text-gray-500 text-[8px] sm:text-[10px] font-black uppercase tracking-wider border border-gray-200">{project.projectSector || 'General'}</span>
                               </div>
-                              <div className="space-y-1.5">
-                                <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden shadow-inner"><div className={`h-full ${STAGE_BG_COLORS[project.projectStage]} transition-all duration-1000`} style={{ width: `${progress}%` }}></div></div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{progress}% PROJECT COMPLETION</span>
-                                    <span className="text-[10px] font-bold text-gray-400 italic">Last Modified: {formatShortDate(project.updatedAt).split(',')[0]}</span>
+                              <div className="space-y-1 sm:space-y-1.5">
+                                <div className="w-full bg-gray-100 rounded-full h-1.5 sm:h-2.5 overflow-hidden shadow-inner"><div className={`h-full ${STAGE_BG_COLORS[project.projectStage]} transition-all duration-1000`} style={{ width: `${progress}%` }}></div></div>
+                                <div className="flex justify-between items-center text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                                    <span>{progress}% COMPLETED</span>
+                                    <span>{formatShortDate(project.updatedAt).split(',')[0]}</span>
                                 </div>
                               </div>
                             </div>
@@ -570,71 +541,62 @@ const ProjectTable: React.FC<ProjectTableProps> = ({
                         </div>
                       </div>
 
-                      {/* Critical Statistics Grid */}
-                      <div className="grid grid-cols-2 gap-4 mb-6">
-                        <div className="bg-nasida-green-900/5 p-4 rounded-[1.5rem] border border-nasida-green-900/10 flex items-center shadow-sm">
-                          <div className="p-2.5 bg-white rounded-xl shadow-sm mr-3 flex-shrink-0">
-                            <CurrencyDollarIcon className="w-8 h-8 text-nasida-green-900" />
+                      {/* STATS GRID - WITH ENHANCED WORTH VISIBILITY */}
+                      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
+                        <div className="bg-nasida-green-900 p-3 sm:p-4 rounded-xl sm:rounded-[1.5rem] border border-nasida-green-800 flex items-center shadow-xl overflow-hidden group">
+                          <div className="p-1.5 sm:p-2.5 bg-white/10 rounded-lg sm:rounded-xl shadow-inner mr-2 sm:mr-3 flex-shrink-0">
+                            <CurrencyDollarIcon className="w-5 h-5 sm:w-8 sm:h-8 text-green-400" />
                           </div>
                           <div className="overflow-hidden">
-                             <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.1em] block mb-0.5">Worth</span>
-                             <span className="font-black text-nasida-green-900 text-lg tabular-nums truncate block leading-none">{formatCurrency(project.investmentWorth)}</span>
+                             <span className="text-[8px] sm:text-[10px] text-green-300/70 font-black uppercase tracking-widest block mb-0.5 truncate">Total Worth</span>
+                             <span className="font-black text-white text-sm sm:text-lg tabular-nums truncate block leading-none">{formatCurrency(project.investmentWorth)}</span>
                           </div>
                         </div>
-                        <div className="bg-blue-600/5 p-4 rounded-[1.5rem] border border-blue-600/10 flex items-center shadow-sm">
-                          <div className="p-2.5 bg-white rounded-xl shadow-sm mr-3 flex-shrink-0">
-                            <UserGroupIcon className="w-8 h-8 text-blue-600" />
+                        <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-[1.5rem] border border-gray-100 flex items-center shadow-md overflow-hidden">
+                          <div className="p-1.5 sm:p-2.5 bg-blue-50 rounded-lg sm:rounded-xl shadow-sm mr-2 sm:mr-3 flex-shrink-0">
+                            <UserGroupIcon className="w-5 h-5 sm:w-8 sm:h-8 text-blue-600" />
                           </div>
                           <div className="overflow-hidden">
-                             <span className="text-[10px] text-gray-500 font-black uppercase tracking-[0.1em] block mb-0.5">Jobs</span>
-                             <span className="font-black text-blue-700 text-lg tabular-nums truncate block leading-none">{project.jobsToBeCreated || 0}</span>
+                             <span className="text-[8px] sm:text-[10px] text-gray-500 font-black uppercase tracking-widest block mb-0.5 truncate">Jobs Created</span>
+                             <span className="font-black text-gray-900 text-sm sm:text-lg tabular-nums truncate block leading-none">{project.jobsToBeCreated || 0}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Full Project Description - Always Fully Visible */}
                       {project.projectDescription && (
-                        <div className="mb-6 bg-gray-50 p-5 rounded-2xl border border-gray-200/60 shadow-inner relative overflow-hidden group">
-                           <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
-                             <DocumentTextIcon className="w-12 h-12 text-nasida-green-900" />
-                           </div>
-                           <div className="flex items-center mb-3">
-                             <span className="text-[10px] text-nasida-green-900 font-black uppercase tracking-[0.2em] block">Detailed Project Overview</span>
-                           </div>
-                           <p className="text-[15px] text-gray-800 leading-relaxed font-medium whitespace-pre-wrap">
+                        <div className="mb-4 sm:mb-6 bg-gray-50 p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-gray-200/60 shadow-inner overflow-hidden relative">
+                           <p className="text-[12px] sm:text-[15px] text-gray-800 leading-relaxed font-medium whitespace-pre-wrap line-clamp-4">
                               {project.projectDescription}
                            </p>
                         </div>
                       )}
 
-                      {/* Meta Information Segment */}
-                      <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-sm mb-6 px-1 border-t border-gray-100 pt-5">
+                      <div className="flex flex-wrap items-center gap-y-2 gap-x-4 sm:gap-x-6 text-xs sm:text-sm mb-4 sm:mb-6 px-1 border-t border-gray-100 pt-4 sm:pt-5">
                         <div className="flex items-center text-gray-600">
-                          <MapPinIcon className="w-5 h-5 mr-2.5 text-nasida-green-900/40" />
-                          <div className="flex flex-col">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Local Gov Area</span>
-                             <span className="font-bold text-gray-800 leading-none">{project.projectLocation}</span>
+                          <MapPinIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-nasida-green-900/40" />
+                          <div className="flex flex-col overflow-hidden">
+                             <span className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-0.5">Location</span>
+                             <span className="font-bold text-gray-800 leading-none truncate">{project.projectLocation}</span>
                           </div>
                         </div>
                         <div className="flex items-center text-gray-600">
-                          <BriefcaseIcon className="w-5 h-5 mr-2.5 text-nasida-green-900/40" />
-                          <div className="flex flex-col">
-                             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Capital Source</span>
-                             <span className="font-bold text-gray-800 leading-none">{project.investmentType}</span>
+                          <BriefcaseIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-nasida-green-900/40" />
+                          <div className="flex flex-col overflow-hidden">
+                             <span className="text-[8px] sm:text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-0.5">Capital</span>
+                             <span className="font-bold text-gray-800 leading-none truncate">{project.investmentType}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Action Segment */}
-                      <div className="flex gap-3">
-                         <button className="flex-grow bg-nasida-green-900 text-white px-5 py-4 rounded-2xl text-xs font-black shadow-xl active:scale-95 transition-all flex items-center justify-center space-x-3 uppercase tracking-[0.1em]" onClick={(e) => { e.stopPropagation(); onProjectClick && onProjectClick(project); }}>
-                           <DocumentTextIcon className="w-5 h-5" />
-                           <span>Full Project Report</span>
+                      <div className="flex flex-col sm:flex-row gap-2">
+                         <button className="flex-grow bg-nasida-green-900 text-white px-4 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-black shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-2 uppercase tracking-widest" onClick={(e) => { e.stopPropagation(); onProjectClick && onProjectClick(project); }}>
+                           <DocumentTextIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                           <span>View Full Report</span>
                          </button>
                          {isEditor && (
                            <div className="flex gap-2">
-                              <button onClick={(e) => { e.stopPropagation(); onEditClick && onEditClick(project); }} className="p-4 rounded-2xl bg-white border border-gray-200 text-gray-500 shadow-md hover:bg-nasida-green-50 transition-colors"><PencilSquareIcon className="w-6 h-6" /></button>
-                              {isAdmin && <button onClick={(e) => { e.stopPropagation(); onDeleteClick && onDeleteClick(project); }} className="p-4 rounded-2xl bg-white border border-red-100 text-red-400 shadow-md hover:bg-red-50 transition-colors"><TrashIcon className="w-6 h-6" /></button>}
+                              <button onClick={(e) => { e.stopPropagation(); onEditClick && onEditClick(project); }} className="flex-grow sm:flex-grow-0 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white border border-gray-200 text-gray-500 shadow-sm hover:bg-nasida-green-50 transition-colors flex justify-center"><PencilSquareIcon className="w-5 h-5 sm:w-6 sm:h-6" /></button>
+                              {isAdmin && <button onClick={(e) => { e.stopPropagation(); onDeleteClick && onDeleteClick(project); }} className="flex-grow sm:flex-grow-0 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-white border border-red-100 text-red-400 shadow-sm hover:bg-red-50 transition-colors flex justify-center"><TrashIcon className="w-5 h-5 sm:w-6 sm:h-6" /></button>}
                            </div>
                          )}
                       </div>

@@ -841,48 +841,53 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-green-50/50 bg-hero-pattern flex flex-col font-sans">
       <header className="bg-nasida-green-900 shadow-lg sticky top-0 z-40">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <img src={NASIDA_LOGO} alt="Nasida" className="h-14 sm:h-20 w-auto object-contain" />
-            <div className="hidden md:flex items-center space-x-6">
+          <div className="flex items-center space-x-3 sm:space-x-6">
+            <img src={NASIDA_LOGO} alt="Nasida" className="h-10 sm:h-14 lg:h-20 w-auto object-contain" />
+            <div className="hidden sm:flex items-center space-x-4 lg:space-x-6">
                 <div className="h-10 w-px bg-green-700/50"></div>
                 <div className="flex flex-col justify-center text-white">
-                    <span className="text-2xl font-bold tracking-tight uppercase">ONE-STOP SHOP</span>
-                    <span className="text-xs text-green-200 uppercase tracking-wide">Investment Tracker</span>
+                    <span className="text-lg lg:text-2xl font-bold tracking-tight uppercase">ONE-STOP SHOP</span>
+                    <span className="text-[10px] lg:text-xs text-green-200 uppercase tracking-wide">Investment Tracker</span>
                 </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-3 flex-shrink-0">
             {/* Public Display Button */}
             <button 
               onClick={() => setIsDisplayDashboardOpen(true)}
-              className="text-xs sm:text-sm bg-nasida-green-500 hover:bg-nasida-green-700 text-white py-1.5 px-3 sm:px-4 rounded-full transition-all border border-nasida-green-400/50 flex items-center shadow-lg font-black uppercase tracking-wider group"
+              className="text-xs sm:text-sm bg-nasida-green-500 hover:bg-nasida-green-700 text-white p-2 sm:py-1.5 sm:px-3 lg:px-4 rounded-full transition-all border border-nasida-green-400/50 flex items-center shadow-lg font-black uppercase tracking-wider group"
               title="Launch Office Slideshow Mode"
             >
               <PresentationChartLineIcon className="w-4 h-4 sm:mr-1.5 group-hover:scale-110 transition-transform" />
-              <span className="hidden sm:inline">Public Display</span>
+              <span className="hidden lg:inline">Public Display</span>
             </button>
 
             {isAdmin && (
               <button 
                 onClick={() => setIsUserManagementOpen(true)}
-                className="text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30 flex items-center shadow-lg"
+                className="text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white p-2 sm:py-1.5 sm:px-3 rounded-full transition-all border border-white/30 flex items-center shadow-lg"
                 title="Manage System Users"
               >
                 <ShieldCheckIcon className="w-4 h-4 sm:mr-1.5" />
-                <span className="hidden sm:inline">Manage Users</span>
+                <span className="hidden lg:inline">Users</span>
               </button>
             )}
+            
             {isEditor && (
-              <>
-                <button onClick={exportAllToPDF} className="text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30 flex items-center shadow-lg"><DocumentTextIcon className="w-4 h-4 sm:mr-1.5" /><span className="hidden sm:inline">Export PDF</span></button>
-                <button onClick={exportAllToCSV} className="text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30 flex items-center shadow-lg"><ArrowDownTrayIcon className="w-4 h-4 sm:mr-1.5" /><span className="hidden sm:inline">Export CSV</span></button>
-              </>
+              <div className="hidden md:flex items-center space-x-2">
+                <button onClick={exportAllToPDF} className="text-xs bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30 flex items-center" title="Export PDF"><DocumentTextIcon className="w-4 h-4" /></button>
+                <button onClick={exportAllToCSV} className="text-xs bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30 flex items-center" title="Export CSV"><ArrowDownTrayIcon className="w-4 h-4" /></button>
+              </div>
             )}
-            <button onClick={handleAdminClick} className="text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white py-1.5 px-3 rounded-full transition-all border border-white/30">{currentUser ? 'Logout' : 'Admin Login'}</button>
+
+            <button onClick={handleAdminClick} className="text-[10px] sm:text-xs lg:text-sm bg-white/10 hover:bg-white/20 text-white py-1.5 px-2.5 sm:px-3 rounded-full transition-all border border-white/30 font-bold uppercase tracking-tight">
+              {currentUser ? 'Logout' : 'Admin'}
+            </button>
+
             {currentUser && (
               <div className="flex items-center text-white">
                  <UserCircleIcon className="w-8 h-8 sm:w-10 sm:h-10 opacity-90" />
-                 <div className="ml-2 hidden sm:flex flex-col">
+                 <div className="ml-2 hidden lg:flex flex-col">
                     <span className="font-bold text-xs capitalize leading-none mb-0.5">{currentUser}</span>
                     <span className="text-[8px] uppercase tracking-widest text-green-300 font-black">{userRole}</span>
                  </div>
@@ -892,16 +897,16 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="container mx-auto p-4 sm:p-6 lg:p-8 flex-grow pb-32">
+      <main className="container mx-auto p-3 sm:p-6 lg:p-8 flex-grow pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-          <div className="lg:col-span-1 space-y-6 lg:space-y-8 order-1">
+          <div className="lg:col-span-1 space-y-6 lg:space-y-8 order-2 lg:order-1">
             {isEditor && (
               <ProjectForm onAddProject={addProject} onBulkAddProjects={bulkAddProjects} existingProjects={projects} currentUser={currentUser || 'guest'} />
             )}
             <RecentlyViewed recentlyViewed={recentlyViewed} allProjects={projects} onProjectClick={handleProjectClick} onClearHistory={() => setRecentlyViewed([])} />
             <ProjectSummary projects={projects} />
           </div>
-          <div className="lg:col-span-2 space-y-6 lg:space-y-8 order-2">
+          <div className="lg:col-span-2 space-y-6 lg:space-y-8 order-1 lg:order-2">
             <FilterControls stageFilter={stageFilter} setStageFilter={setStageFilter} sectorFilter={sectorFilter} setSectorFilter={setSectorFilter} availableSectors={availableSectors} />
             <ProjectTable 
                 projects={filteredProjects} 
@@ -925,10 +930,10 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="py-8 text-center text-sm text-gray-600 border-t border-green-100 mt-8 bg-white/80">
+      <footer className="py-8 text-center text-sm text-gray-600 border-t border-green-100 mt-8 bg-white/80 px-4">
         <p className="font-semibold text-primary">NASIDA HQ</p>
-        <p>Shendam Road, Lafia</p>
-        <p className="mt-2 text-xs text-gray-400">&copy; {new Date().getFullYear()} NASIDA One-Stop Shop.</p>
+        <p>Shendam Road, Lafia, Nasarawa State</p>
+        <p className="mt-2 text-[10px] text-gray-400 uppercase tracking-[0.2em] font-black">&copy; {new Date().getFullYear()} NASIDA One-Stop Shop.</p>
       </footer>
 
       {/* Presentation Mode Overlay */}

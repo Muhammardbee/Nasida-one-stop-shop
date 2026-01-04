@@ -41,19 +41,19 @@ const STAGE_HEX_COLORS: Record<ProjectStage, string> = {
 // Metadata for Lifecycle Stages
 const STAGE_METADATA: Record<ProjectStage, { milestones: string[], duration: string }> = {
   [ProjectStage.INITIATION]: {
-    milestones: ['Project Profiling', 'Investor Briefing'],
-    duration: '2-4 Weeks'
+    milestones: ['Profiling', 'Briefing'],
+    duration: '2-4w'
   },
   [ProjectStage.MOU_SIGNED]: {
-    milestones: ['Legal Review', 'Signing Ceremony'],
-    duration: '1-3 Months'
+    milestones: ['Review', 'Signing'],
+    duration: '1-3m'
   },
   [ProjectStage.MOVED_TO_SITE]: {
-    milestones: ['Groundbreaking', 'Civil Works'],
-    duration: '6-18 Months'
+    milestones: ['Groundbreaking', 'Civil'],
+    duration: '6-18m'
   },
   [ProjectStage.COMPLETED]: {
-    milestones: ['Commissioning', 'Launch'],
+    milestones: ['Launch'],
     duration: 'Final'
   }
 };
@@ -119,67 +119,67 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
   }, [stageCounts, totalProjects]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-md border-l-4 border-nasida-green-900 group hover:shadow-lg transition-shadow">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4">
+        <div className="bg-white p-3 sm:p-4 rounded-xl shadow-md border-l-4 border-nasida-green-900 group hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
                 <div className="overflow-hidden">
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Total Investment</p>
-                    <p className="text-xl font-black text-nasida-green-900 truncate" title={formatCurrencyFull(totalInvestment)}>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Investment</p>
+                    <p className="text-lg sm:text-xl font-black text-nasida-green-900 truncate" title={formatCurrencyFull(totalInvestment)}>
                         {formatCurrencyCompact(totalInvestment)}
                     </p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
-                    <CurrencyDollarIcon className="w-6 h-6 text-nasida-green-900" />
+                <div className="p-2 sm:p-3 bg-green-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
+                    <CurrencyDollarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-nasida-green-900" />
                 </div>
             </div>
         </div>
         
-        <div className="bg-white p-4 rounded-xl shadow-md border-l-4 border-nasida-green-500 group hover:shadow-lg transition-shadow">
+        <div className="bg-white p-3 sm:p-4 rounded-xl shadow-md border-l-4 border-nasida-green-500 group hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
                 <div className="overflow-hidden">
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Expected Jobs</p>
-                    <p className="text-xl font-black text-gray-800 truncate">{formatNumber(totalJobs)}</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Target Jobs</p>
+                    <p className="text-lg sm:text-xl font-black text-gray-800 truncate">{formatNumber(totalJobs)}</p>
                 </div>
-                <div className="p-3 bg-green-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
-                    <UserGroupIcon className="w-6 h-6 text-nasida-green-500" />
+                <div className="p-2 sm:p-3 bg-green-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
+                    <UserGroupIcon className="w-5 h-5 sm:w-6 sm:h-6 text-nasida-green-500" />
                 </div>
             </div>
         </div>
 
-        <div className="bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 group hover:shadow-lg transition-shadow">
+        <div className="bg-white p-3 sm:p-4 rounded-xl shadow-md border-l-4 border-blue-500 group hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
                 <div className="overflow-hidden">
-                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Active Projects</p>
-                    <p className="text-xl font-black text-gray-800 truncate">{totalProjects}</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider truncate mb-1">Projects</p>
+                    <p className="text-lg sm:text-xl font-black text-gray-800 truncate">{totalProjects}</p>
                 </div>
-                <div className="p-3 bg-blue-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
-                    <BriefcaseIcon className="w-6 h-6 text-blue-600" />
+                <div className="p-2 sm:p-3 bg-blue-50 rounded-xl flex-shrink-0 ml-2 group-hover:scale-110 transition-transform">
+                    <BriefcaseIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                 </div>
             </div>
         </div>
       </div>
 
       {/* Pipeline Distribution - Donut Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-        <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <h2 className="text-sm sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <div className="p-1.5 bg-nasida-green-900/10 rounded-lg mr-2">
-                <ChartBarIcon className="w-5 h-5 text-nasida-green-900" />
+                <ChartBarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-nasida-green-900" />
             </div>
             Pipeline Distribution
         </h2>
 
         {totalProjects === 0 ? (
           <div className="py-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-             <p className="text-gray-400 text-sm italic">No data available to visualize distribution.</p>
+             <p className="text-gray-400 text-xs italic">No data available.</p>
           </div>
         ) : (
           <div className="flex flex-col items-center">
-            <div className="relative w-48 h-48 mb-6">
+            <div className="relative w-36 h-36 sm:w-48 sm:h-48 mb-4 sm:mb-6">
               <svg viewBox="0 0 42 42" className="w-full h-full transform -rotate-90">
                 <circle cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#f3f4f6" strokeWidth="6"></circle>
-                {donutSegments.map((seg, idx) => (
+                {donutSegments.map((seg) => (
                   <circle
                     key={seg.stage}
                     cx="21"
@@ -196,25 +196,22 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
                   />
                 ))}
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none px-2">
                 {hoveredStage ? (
                   <>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1 truncate w-full">
                       {hoveredStage}
                     </span>
-                    <span className="text-2xl font-black text-gray-900 leading-none">
+                    <span className="text-xl sm:text-2xl font-black text-gray-900 leading-none">
                       {stageCounts[hoveredStage]}
-                    </span>
-                    <span className="text-[10px] font-bold text-gray-500 mt-1">
-                      {Math.round((stageCounts[hoveredStage] / totalProjects) * 100)}%
                     </span>
                   </>
                 ) : (
                   <>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
                       Total
                     </span>
-                    <span className="text-3xl font-black text-nasida-green-900 leading-none">
+                    <span className="text-2xl sm:text-3xl font-black text-nasida-green-900 leading-none">
                       {totalProjects}
                     </span>
                   </>
@@ -222,7 +219,7 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-y-3 gap-x-6 w-full px-2">
+            <div className="grid grid-cols-2 gap-y-2 sm:gap-y-3 gap-x-4 sm:gap-x-6 w-full px-1">
               {donutSegments.map((seg) => (
                 <div 
                   key={seg.stage} 
@@ -230,13 +227,13 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
                   onMouseEnter={() => setHoveredStage(seg.stage)}
                   onMouseLeave={() => setHoveredStage(null)}
                 >
-                  <div className="w-3 h-3 rounded-sm mr-2 shadow-sm" style={{ backgroundColor: seg.color }}></div>
+                  <div className="w-2.5 h-2.5 rounded-sm mr-2 shadow-sm flex-shrink-0" style={{ backgroundColor: seg.color }}></div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="text-[10px] font-black text-gray-900 uppercase tracking-tight truncate leading-none mb-0.5">
+                    <span className="text-[8px] sm:text-[10px] font-black text-gray-900 uppercase tracking-tight truncate leading-none mb-0.5">
                       {seg.label}
                     </span>
-                    <span className="text-[9px] font-bold text-gray-400 tabular-nums">
-                      {seg.count} projects
+                    <span className="text-[7px] sm:text-[9px] font-bold text-gray-400 tabular-nums">
+                      {seg.count}
                     </span>
                   </div>
                 </div>
@@ -246,37 +243,34 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
         )}
       </div>
 
-      {/* Sector Distribution Visualization - Horizontal Bar Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-        <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
+      {/* Sector Distribution Visualization */}
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <h2 className="text-sm sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <div className="p-1.5 bg-nasida-green-900/10 rounded-lg mr-2">
-                <BriefcaseIcon className="w-5 h-5 text-nasida-green-900" />
+                <BriefcaseIcon className="w-4 h-4 sm:w-5 sm:h-5 text-nasida-green-900" />
             </div>
-            Sector Distribution
+            Sectors
         </h2>
 
         {sectorData.length === 0 ? (
-          <div className="py-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-             <p className="text-gray-400 text-sm italic">No sector data available to visualize.</p>
+          <div className="py-8 text-center">
+             <p className="text-gray-400 text-xs italic">No sector data.</p>
           </div>
         ) : (
-          <div className="space-y-6">
-            {sectorData.map((sector) => {
+          <div className="space-y-4 sm:space-y-6">
+            {sectorData.slice(0, 8).map((sector) => {
               const widthPct = (sector.totalWorth / maxSectorWorth) * 100;
               return (
                 <div key={sector.name} className="group">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center space-x-2.5 overflow-hidden">
-                      <span className="text-xs font-black text-gray-800 truncate uppercase tracking-tight">{sector.name}</span>
-                      <span className="flex-shrink-0 text-[9px] font-black bg-nasida-green-900/10 text-nasida-green-900 px-2 py-0.5 rounded-full border border-nasida-green-900/20" title={`${sector.count} Projects in ${sector.name}`}>
-                        {sector.count} {sector.count === 1 ? 'Project' : 'Projects'}
-                      </span>
+                  <div className="flex justify-between items-center mb-1.5 sm:mb-2">
+                    <div className="flex items-center space-x-2 overflow-hidden mr-2">
+                      <span className="text-[10px] sm:text-xs font-black text-gray-800 truncate uppercase tracking-tight">{sector.name}</span>
                     </div>
-                    <span className="text-xs font-black text-nasida-green-900 tabular-nums">
+                    <span className="text-[10px] sm:text-xs font-black text-nasida-green-900 tabular-nums">
                       {formatCurrencyCompact(sector.totalWorth)}
                     </span>
                   </div>
-                  <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                  <div className="relative w-full h-2 sm:h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
                     <div 
                       className="absolute top-0 left-0 h-full bg-gradient-to-r from-nasida-green-900 to-nasida-green-500 rounded-full transition-all duration-1000 ease-out group-hover:brightness-110"
                       style={{ width: `${Math.max(widthPct, 1.5)}%` }}
@@ -285,67 +279,47 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
                 </div>
               );
             })}
-            <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                 Sector Totals
-               </p>
-               <span className="text-[10px] font-black text-gray-500">{sectorData.length} active sectors</span>
-            </div>
           </div>
         )}
       </div>
 
       {/* Project Lifecycle Pipeline */}
-      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold text-gray-900 flex items-center">
-                <ClockIcon className="w-5 h-5 mr-2 text-nasida-green-900" />
-                Project Pipeline
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-sm sm:text-lg font-bold text-gray-900 flex items-center">
+                <ClockIcon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-nasida-green-900" />
+                Pipeline
             </h2>
-            <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full uppercase tracking-widest">Live Status</span>
         </div>
 
         {totalProjects === 0 ? (
           <div className="py-4 text-center">
-             <p className="text-gray-400 text-sm italic">No project data available.</p>
+             <p className="text-gray-400 text-xs italic">No projects.</p>
           </div>
         ) : (
-          <div className="relative pl-2">
-            {/* The Vertical Line */}
-            <div className="absolute left-6 top-2 bottom-2 w-0.5 bg-gray-100"></div>
+          <div className="relative pl-1">
+            <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-gray-100"></div>
 
-            <div className="space-y-8">
-              {PROJECT_STAGE_OPTIONS.map((stageOpt, index) => {
+            <div className="space-y-6 sm:space-y-8">
+              {PROJECT_STAGE_OPTIONS.map((stageOpt) => {
                 const stage = stageOpt.value as ProjectStage;
                 const count = stageCounts[stage];
                 const meta = STAGE_METADATA[stage];
 
                 return (
                   <div key={stage} className="relative flex items-start group">
-                    {/* Node Dot */}
-                    <div className={`relative z-10 w-8 h-8 rounded-full border-4 border-white shadow-md flex items-center justify-center transition-all group-hover:scale-110 ${count > 0 ? STAGE_BG_COLORS[stage] : 'bg-gray-200'}`}>
-                        {count > 0 && <span className="text-[10px] font-black text-white">{count}</span>}
+                    <div className={`relative z-10 w-6 h-6 sm:w-8 sm:h-8 rounded-full border-[3px] sm:border-4 border-white shadow-md flex items-center justify-center transition-all group-hover:scale-110 ${count > 0 ? STAGE_BG_COLORS[stage] : 'bg-gray-200'}`}>
+                        {count > 0 && <span className="text-[8px] sm:text-[10px] font-black text-white">{count}</span>}
                     </div>
 
-                    <div className="ml-6 flex-grow">
+                    <div className="ml-4 sm:ml-6 flex-grow">
                       <div className="flex items-center justify-between">
-                        <h3 className={`text-sm font-black uppercase tracking-tight ${count > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
+                        <h3 className={`text-[10px] sm:text-sm font-black uppercase tracking-tight ${count > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
                             {stageOpt.label}
                         </h3>
-                        <span className="text-[10px] font-bold text-gray-400 italic">{meta.duration}</span>
+                        <span className="text-[8px] sm:text-[10px] font-bold text-gray-400 italic">{meta.duration}</span>
                       </div>
-                      
-                      {/* Milestone Pills */}
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {meta.milestones.map(m => (
-                            <span key={m} className="px-2 py-0.5 rounded-md bg-gray-50 border border-gray-100 text-[9px] font-bold text-gray-500 uppercase tracking-wide">
-                                {m}
-                            </span>
-                        ))}
-                      </div>
-
-                      {/* Progress Bar Detail */}
-                      <div className="mt-3 w-full bg-gray-50 rounded-full h-1 overflow-hidden">
+                      <div className="mt-1 w-full bg-gray-50 rounded-full h-1 overflow-hidden">
                         <div
                             className={`${STAGE_BG_COLORS[stage]} h-full rounded-full transition-all duration-1000 ease-out`}
                             style={{ width: totalProjects > 0 ? `${(count / totalProjects) * 100}%` : '0%' }}
@@ -360,46 +334,37 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
         )}
       </div>
 
-      {/* Investment Distribution Bar Chart */}
-      <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-        <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
+      {/* Investment Strategy Bar Chart */}
+      <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100">
+        <h2 className="text-sm sm:text-lg font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
             <div className="p-1.5 bg-nasida-green-900/10 rounded-lg mr-2">
-                <CurrencyDollarIcon className="w-5 h-5 text-nasida-green-900" />
+                <CurrencyDollarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-nasida-green-900" />
             </div>
-            Investment Strategy
+            Strategy
         </h2>
         
         {totalProjects === 0 ? (
            <div className="py-8 text-center">
-                <p className="text-gray-400 text-sm italic">Add projects to see visualization.</p>
+                <p className="text-gray-400 text-xs italic">Add data.</p>
            </div>
         ) : (
-            <div className="space-y-8">
-                {/* Vertical Bar Chart Representation */}
-                <div className="flex items-end justify-between h-48 px-2 border-b border-gray-200 gap-4">
+            <div className="space-y-4">
+                <div className="flex items-end justify-between h-32 sm:h-48 px-1 border-b border-gray-200 gap-2 sm:gap-4">
                     {INVESTMENT_TYPE_OPTIONS.map(typeOpt => {
                         const amount = investmentTypeAmounts[typeOpt.value] || 0;
                         const heightPercentage = (amount / maxInvestment) * 100;
                         
                         return (
                             <div key={typeOpt.value} className="flex-1 flex flex-col items-center group relative h-full justify-end">
-                                {/* Value Label on Hover */}
-                                <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-nasida-green-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap z-10 pointer-events-none">
+                                <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity bg-nasida-green-900 text-white text-[8px] sm:text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap z-10 pointer-events-none">
                                     {formatCurrencyFull(amount)}
                                 </div>
-                                
-                                {/* The Bar */}
                                 <div 
-                                    className="w-full bg-gradient-to-t from-nasida-green-900 to-nasida-green-700 rounded-t-lg transition-all duration-1000 ease-in-out shadow-sm group-hover:brightness-110 relative"
+                                    className="w-full bg-gradient-to-t from-nasida-green-900 to-nasida-green-700 rounded-t-md sm:rounded-t-lg transition-all duration-1000 shadow-sm"
                                     style={{ height: `${Math.max(heightPercentage, amount > 0 ? 5 : 0)}%` }}
-                                >
-                                    {/* Subtle Overlay for 3D look */}
-                                    <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity rounded-t-lg"></div>
-                                </div>
-                                
-                                {/* Axis Label */}
+                                />
                                 <div className="mt-2 text-center">
-                                    <span className="text-[10px] font-black text-gray-500 uppercase tracking-tighter block leading-none">
+                                    <span className="text-[8px] sm:text-[10px] font-black text-gray-500 uppercase block leading-none">
                                         {typeOpt.value}
                                     </span>
                                 </div>
@@ -407,18 +372,16 @@ const ProjectSummary: React.FC<ProjectSummaryProps> = ({ projects }) => {
                         );
                     })}
                 </div>
-
-                {/* Legend/Details List */}
-                <div className="grid grid-cols-1 gap-3 pt-2">
+                <div className="grid grid-cols-1 gap-2 pt-2">
                     {INVESTMENT_TYPE_OPTIONS.map(typeOpt => {
                         const amount = investmentTypeAmounts[typeOpt.value] || 0;
                         return (
-                            <div key={typeOpt.value} className="flex items-center justify-between text-xs">
-                                <div className="flex items-center">
-                                    <div className="w-2 h-2 rounded-full bg-nasida-green-900 mr-2"></div>
-                                    <span className="text-gray-600 font-medium">{typeOpt.label.split(' (')[0]}</span>
+                            <div key={typeOpt.value} className="flex items-center justify-between text-[10px] sm:text-xs">
+                                <div className="flex items-center overflow-hidden">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-nasida-green-900 mr-2 flex-shrink-0"></div>
+                                    <span className="text-gray-600 font-medium truncate">{typeOpt.label.split(' (')[0]}</span>
                                 </div>
-                                <span className="font-black text-gray-900">{formatCurrencyCompact(amount)}</span>
+                                <span className="font-black text-gray-900 ml-2">{formatCurrencyCompact(amount)}</span>
                             </div>
                         );
                     })}
